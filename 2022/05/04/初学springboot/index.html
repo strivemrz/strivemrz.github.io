@@ -403,16 +403,15 @@
 <p>异步任务（之前都是等待方法完成在执行下一步，现在可以跳过等待时间直接执行下一步）</p>
 <p>在主运行类上开启异步@EnableAsync</p>
 <p>在service上加异步注解@Async&#x3D;》表示这个一个异步操作可以先执行下面的</p>
-<ol>
-<li><p>邮件任务</p>
+<p>邮件任务</p>
 <p>加入依赖</p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--        邮件任务--&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-mail<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
 
 <figure class="highlight yaml"><table><tr><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span><br> <span class="hljs-attr">mail:</span><br>  <span class="hljs-attr">username:</span> <span class="hljs-number">1965165252</span><span class="hljs-string">@qq.com</span><br>  <span class="hljs-attr">password:</span> <span class="hljs-string">通过qq邮件获取设置-》</span><br>  <span class="hljs-attr">host:</span> <span class="hljs-string">smtp.qq.com</span><br>  <span class="hljs-attr">properties:</span><br>    <span class="hljs-attr">mail:</span><br>      <span class="hljs-attr">smtp:</span><br>        <span class="hljs-attr">ssl:</span><br>          <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
 
 <figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.mywrok;<br><br><span class="hljs-keyword">import</span> org.junit.jupiter.api.Test;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.boot.test.context.SpringBootTest;<br><span class="hljs-keyword">import</span> org.springframework.mail.SimpleMailMessage;<br><span class="hljs-keyword">import</span> org.springframework.mail.javamail.JavaMailSenderImpl;<br><br><span class="hljs-keyword">import</span> javax.sql.DataSource;<br><span class="hljs-keyword">import</span> java.sql.Connection;<br><br><br><span class="hljs-meta">@SpringBootTest</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">SpringbootLearnApplicationTests</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> JavaMailSenderImpl javaMailSender;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sendMail</span><span class="hljs-params">()</span>&#123;<br>        <span class="hljs-comment">//简单邮件发送</span><br>        SimpleMailMessage simpleMailMessage=<span class="hljs-keyword">new</span> <span class="hljs-title class_">SimpleMailMessage</span>();<br>        simpleMailMessage.setSubject(<span class="hljs-string">&quot;hello 阿辉&quot;</span>);<span class="hljs-comment">//主题</span><br>        simpleMailMessage.setText(<span class="hljs-string">&quot;许久未见&quot;</span>);<span class="hljs-comment">//内容</span><br>        simpleMailMessage.setFrom(<span class="hljs-string">&quot;1965165252@qq.com&quot;</span>);<span class="hljs-comment">//自己的qq邮箱</span><br>        simpleMailMessage.setTo(<span class="hljs-string">&quot;1965165252@qq.com&quot;</span>);<span class="hljs-comment">//发送地址</span><br>        javaMailSender.send(simpleMailMessage);<br>    &#125;<br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sendMain2</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> MessagingException &#123;<br>        <span class="hljs-comment">//复杂邮件发送</span><br>        <span class="hljs-type">MimeMessage</span> <span class="hljs-variable">mimeMessage</span> <span class="hljs-operator">=</span> javaMailSender.createMimeMessage();<br>        <span class="hljs-type">MimeMessageHelper</span> <span class="hljs-variable">mimeMessageHelper</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MimeMessageHelper</span>(mimeMessage,<span class="hljs-literal">true</span>);<br><br>        mimeMessageHelper.setSubject(<span class="hljs-string">&quot;hello 阿辉&quot;</span>);<br>        mimeMessageHelper.setText(<span class="hljs-string">&quot;&lt;p style=&#x27;color:red&#x27;&gt;hello world&lt;/p&gt;&quot;</span>,<span class="hljs-literal">true</span>);<br><br>        mimeMessageHelper.addAttachment(<span class="hljs-string">&quot;1.jpg&quot;</span>,<span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;A:\\壁纸\\img\\cover12.4.jpg&quot;</span>));<br><br>        mimeMessageHelper.setFrom(<span class="hljs-string">&quot;1965165252@qq.com&quot;</span>);<br>        mimeMessageHelper.setTo(<span class="hljs-string">&quot;1965165252@qq.com&quot;</span>);<br>        javaMailSender.send(mimeMessage);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-</li>
-<li><p>定时任务</p>
+
+<p>定时任务</p>
 <p>cron表达式</p>
 <p>cron表达式，六个值 （秒，分，时，日，月，星期)</p>
 <ul>
@@ -434,8 +433,8 @@
 </li>
 </ul>
 <figure class="highlight java"><table><tr><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@EnableScheduling</span><span class="hljs-comment">//在运行类开启定时功能注解</span><br><span class="hljs-meta">@Scheduled</span><span class="hljs-comment">//什么时候执行,在service类中使用</span><br>TaskScheduler<span class="hljs-comment">//任务调度者</span><br>TaskExecutor<span class="hljs-comment">//任务执行者</span><br></code></pre></td></tr></table></figure>
-</li>
-<li><p>远程服务调用(RPC)</p>
+
+<p>远程服务调用(RPC)</p>
 <p>rpc两个核心模块:通讯，序列化(数据传输需要转换)</p>
 <p>什么时dubbo？</p>
 <p>dubbo是一款高性能，轻量级的开源java rpc框架，它提供了三大核心能力，面向接口的远程方法调用，智能容错和负载均衡，以及服务自动注册和发现</p>
@@ -448,11 +447,6 @@
 <p>管理员身份运行zkServer.sh报错(可在内部加pause，暂停查看报错信息),也有可能是8080端口冲突</p>
 <p>dubbo下载地址：<a target="_blank" rel="noopener" href="https://github.com/dangdangdotcom/dubbox">https://github.com/dangdangdotcom/dubbox</a></p>
 <figure class="highlight cmd"><table><tr><td class="code"><pre><code class="hljs cmd"><span class="hljs-function">G:\<span class="hljs-title">dubbo</span>\<span class="hljs-title">dubbox</span>-<span class="hljs-title">master</span>&gt;<span class="hljs-title">mvn</span> <span class="hljs-title">clean</span> <span class="hljs-title">package</span> -<span class="hljs-title">Dmaven.test.skip</span>=<span class="hljs-title">true</span></span><br></code></pre></td></tr></table></figure>
-
-
-</li>
-<li></li>
-</ol>
 
     </div>
 </div>
