@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Redis |  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Redis"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Redis
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/05/12/Redis/" class="article-date">
+  <time datetime="2022-05-12T14:25:44.013Z" itemprop="datePublished">2022-05-12</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Redis/">Redis</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">12 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h3 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a><strong>Redis</strong></h3><p><em>远程字典服务</em></p>
+<ol>
+<li><p>非关系型数据库(NoSQL)</p>
+<p>不仅仅是sql</p>
+<p>在web2.0时代之前的关系型数据库难以应付高并发</p>
+<p>nosql是一种细粒度的缓存，性能会比较高</p>
+<p>数据类型是多样型的（不需要事先设计数据库，随取随用）</p>
+</li>
+<li><p>Map&lt;String,String&gt; map;使用键值对来控制</p>
+</li>
+</ol>
+<h3 id="Redis能干啥？"><a href="#Redis能干啥？" class="headerlink" title="Redis能干啥？"></a>Redis能干啥？</h3><ol>
+<li>内存存储，持久化，内存中是断电即失</li>
+</ol>
+<h3 id="安装Redis"><a href="#安装Redis" class="headerlink" title="安装Redis"></a>安装Redis</h3><ol>
+<li><p>下载redis(若版本较高，安装到linux需要升级gcc)</p>
+<p>升级gcc</p>
+<p>sudo yum install centos-release-scl</p>
+<p>sudo yum install devtoolset-7-gcc*</p>
+<p>scl enable devtoolset-7 bash</p>
+<p>这种只是临时的退出linux之后还是原来的gcc版本</p>
+<p>echo “source &#x2F;opt&#x2F;rh&#x2F;{对应的redis文件}&#x2F;enable” &gt;&gt;&#x2F;etc&#x2F;profile</p>
+</li>
+<li><p>利用上传工具上传到linux，这里用的是Xftp</p>
+</li>
+<li><p>将redis压缩包移到&#x2F;opt目录下</p>
+<p>mv redis文件 目标地址</p>
+<p>cd 目标地址</p>
+</li>
+<li><p>解压redis压缩包</p>
+<p>tar -zxvf redis文件</p>
+</li>
+<li><p>进入redis文件内部</p>
+</li>
+<li><p>安装c++环境(redis是基于c++的)</p>
+<p>yum install gcc-c++</p>
+</li>
+<li><p>make(编译)</p>
+<p>把需要的文件全部配上</p>
+</li>
+<li><p>make install(安装)</p>
+</li>
+<li><p>安装目录(cd &#x2F;usr&#x2F;local&#x2F;bin)</p>
+<p><img src="C:\Users\19651\AppData\Roaming\Typora\typora-user-images\image-20220511163649719.png" alt="image-20220511163649719"></p>
+</li>
+<li><p>将redis配置文件，复制到当前目录下</p>
+<p>mkdir zconfig</p>
+<p>cp &#x2F;opt&#x2F;redis-7.0.0&#x2F;redis.conf zconfig</p>
+<p><img src="C:\Users\19651\AppData\Roaming\Typora\typora-user-images\image-20220511164320523.png" alt="image-20220511164320523"></p>
+</li>
+<li><p>redis默认不是后台启动的</p>
+<p>进入redis.conf</p>
+<p><img src="C:\Users\19651\AppData\Roaming\Typora\typora-user-images\image-20220511164630556.png" alt="image-20220511164630556"></p>
+</li>
+<li><p>运行redis</p>
+<p>redis-server zconfig&#x2F;redis.conf</p>
+<p>redis-cli -p 6379(使用redis客户端连接)</p>
+<p><img src="C:\Users\19651\AppData\Roaming\Typora\typora-user-images\image-20220511165132959.png" alt="image-20220511165132959"></p>
+<p>ping(查看是否接通)</p>
+</li>
+<li><p>退出redis</p>
+<p>shutdown</p>
+<p>exit</p>
+</li>
+</ol>
+<h3 id="Redis工具"><a href="#Redis工具" class="headerlink" title="Redis工具"></a>Redis工具</h3><ol>
+<li><p>redis-benchmark是一个压力测试工具</p>
+<p>redis-benchmark -h localhost -p 6379 -c 50 -n 10000</p>
+<table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">选项</th>
+<th align="left">描述</th>
+<th align="left">默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left">-h</td>
+<td align="left">指定redis server 主机名</td>
+<td align="left">localhost</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">-p</td>
+<td align="left">指定redis 服务端口</td>
+<td align="left">6379</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left">-s</td>
+<td align="left">指定服务器socket</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left">-c</td>
+<td align="left">指定并发连接数</td>
+<td align="left">50</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left">-n</td>
+<td align="left">指定请求数</td>
+<td align="left">10000</td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="left">-d</td>
+<td align="left">以字节形式指定SET&#x2F;GET值的数值大小</td>
+<td align="left">2</td>
+</tr>
+<tr>
+<td align="left">7</td>
+<td align="left">-k</td>
+<td align="left">1&#x3D;keepalive 0&#x3D;reconnect</td>
+<td align="left">1</td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="left">-r</td>
+<td align="left">SET&#x2F;GET&#x2F;INCR使用随机key, SADD使用随机值</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="left">-P</td>
+<td align="left">通过管道传输<numreq>请求</td>
+<td align="left">1</td>
+</tr>
+<tr>
+<td align="left">10</td>
+<td align="left">-q</td>
+<td align="left">强制退出redis.仅显示query&#x2F;sec值</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">11</td>
+<td align="left">-csv</td>
+<td align="left">以csv格式输出</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">12</td>
+<td align="left">-l</td>
+<td align="left">生成循环 永久执行测试</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">13</td>
+<td align="left">-t</td>
+<td align="left">仅运行以逗号分隔的测试命令列表</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">14</td>
+<td align="left">-I</td>
+<td align="left">Idle模式,仅打开N个idle连接并等待</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p><img src="C:\Users\19651\AppData\Roaming\Typora\typora-user-images\image-20220511175118539.png" alt="image-20220511175118539"></p>
+</li>
+</ol>
+<h3 id="Redis基本知识说明"><a href="#Redis基本知识说明" class="headerlink" title="Redis基本知识说明"></a>Redis基本知识说明</h3><ol>
+<li><p>redis默认有16个数据库</p>
+<p>默认使用的是第0个</p>
+<p>select num 切换数据库</p>
+</li>
+<li><p>~~~bash<br>127.0.0.1:6379&gt; select 0 #切换数据库0-15<br>OK<br>127.0.0.1:6379&gt; dbsize #当前数据库大小<br>(integer) 5<br>127.0.0.1:6379&gt; keys * #查看当前数据库所有的键值</p>
+<ol>
+<li>“myhash”</li>
+<li>“name”</li>
+<li>“counter:<strong>rand_int</strong>“</li>
+<li>“key:<strong>rand_int</strong>“</li>
+<li>“mylist”<br>127.0.0.1:6379&gt; flushdb #清空当前数据库<br>127.0.0.1:6379[1]&gt; flushall #清空所有数据库<br>127.0.0.1:6379[1]&gt; exists key #查看key是否存在<br>127.0.0.1:6379&gt; move name 1 #移动数据到第几个数据库<br>127.0.0.1:6379&gt; expire he 10 #设置过期时间为10秒<br>.1:6379&gt; ttl he #查看元素还剩多长时间过期<br>127.0.0.1:6379&gt; del he #删除当前元素<br>127.0.0.1:6379&gt; type na #查看当前元素什么类型<figure class="highlight accesslog"><table><tr><td class="code"><pre><code class="hljs accesslog"><br><span class="hljs-number">3</span>. redis是单线程的<br><br>   Redis是很快的，官方表示，Redis是基于内存操作，CPU不是Redis性能瓶颈，Redis的瓶颈是根据机器的内存和网络带宽，既然可以使用单线程来实现，就使用单线程了<br><br>   cpu&gt;内存&gt;硬盘<br><br>   多线程(cpu上下文会切换) 不一定会比单线程效率高<br><br>   核心：redis是将所有的数据全部放在内存中的，所有说使用单线程去操作效率就是最高的，多线程(cpu会上下文切换，耗时的操作)对于内存系统来说，如果没有上下文切换效率就是最高的，每次读写都是在一个cpu上的，在内存情况下，这个就是最佳方案<br><br><span class="hljs-number">4</span>. Redis五大数据类型<br><br>   Redis是一个开源的，内存中的数据结构存储系统，它可以用作**数据库**，**缓存**和**消息中间件MQ**<br><br>   Redis-key<br><br>   String<br><br>   List<br><br>   Set<br><br>   Hash<br><br>   Zset<br><br><span class="hljs-number">5</span>. 三种基本数据类型<br><br>   geospatial<br><br>   hyperloglog<br><br>   bitmaps<br><br>### String字符串类型详解<br><br>~~~bash<br><span class="hljs-number">127.0.0.1:6379</span>&gt; dbsize<br>(integer) <span class="hljs-number">1</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; keys *<br><span class="hljs-number">1</span>) <span class="hljs-string">&quot;na&quot;</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; append na whe # 往na后添加字符串，如果字符串不存在就相当于set key<br><span class="hljs-number">127.0.0.1:6379</span>&gt; strlen na #获取na的长度<br><span class="hljs-number">127.0.0.1:6379</span>&gt; set num <span class="hljs-number">1</span><br>OK<br><span class="hljs-number">127.0.0.1:6379</span>&gt; type num<br>string<br><span class="hljs-number">127.0.0.1:6379</span>&gt; incr num #一次增加一个<br>(integer) <span class="hljs-number">2</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; incrby num <span class="hljs-number">10</span> #一次增加n个<br>(integer) <span class="hljs-number">12</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; get num<br><span class="hljs-string">&quot;12&quot;</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; decr num #一次减少一个<br>(integer) <span class="hljs-number">11</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; decrby num <span class="hljs-number">10</span> #一次减少n个<br>(integer) <span class="hljs-number">1</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; getrange title <span class="hljs-number">0</span> <span class="hljs-number">2</span> #截取字符串显示<br><span class="hljs-string">&quot;hel&quot;</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; getrange title <span class="hljs-number">0</span> -<span class="hljs-number">1</span> #全部输出<br><span class="hljs-string">&quot;hello,world&quot;</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; setrange title <span class="hljs-number">1</span> push #替换，相当于replease<br>(integer) <span class="hljs-number">11</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; get title<br><span class="hljs-string">&quot;hpush,world&quot;</span><br>###################################################<br><span class="hljs-number">127.0.0.1:6379</span>&gt; setex title2 <span class="hljs-number">10</span> hello,world #<span class="hljs-number">10</span>秒后过期<br>OK<br><span class="hljs-number">127.0.0.1:6379</span>&gt; ttl title2<br>(integer) <span class="hljs-number">4</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; setnx title2 jelly #如果key不存在添加成功，存在添加失败(常用在分布式锁中)<br>(integer) <span class="hljs-number">0</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; mset k1 v1 k2 v2 k3 v4#同时设置多个值<br>OK<br><span class="hljs-number">127.0.0.1:6379</span>&gt; mget k1 k2 k3#同时获取多个值<br><span class="hljs-number">1</span>) <span class="hljs-string">&quot;v1&quot;</span><br><span class="hljs-number">2</span>) <span class="hljs-string">&quot;v2&quot;</span><br><span class="hljs-number">3</span>) <span class="hljs-string">&quot;v4&quot;</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; msetnx k5 v5 k7 v7#不存在时设置成功，原子操作<br>(integer) <span class="hljs-number">1</span><br>##对象<br><span class="hljs-number">127.0.0.1:6379</span>&gt; set user:<span class="hljs-number">1</span> &#123;name:zs,age:<span class="hljs-number">15</span>&#125; #获取key之后类似于json数据<br>OK<br><span class="hljs-number">127.0.0.1:6379</span>&gt; mset user:<span class="hljs-number">1</span>:name zs user:<span class="hljs-number">1</span>:age <span class="hljs-number">15</span><br><span class="hljs-number">127.0.0.1:6379</span>&gt; getset user:<span class="hljs-number">1</span>:name lb#将给定key的值设置为value并返回旧值<br><span class="hljs-string">&quot;zs&quot;</span><br></code></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ol>
+<h3 id="List类型详解"><a href="#List类型详解" class="headerlink" title="List类型详解"></a>List类型详解</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#头插，顺序是反的</span><br>127.0.0.1:6379&gt; lpush list list1<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; lpush list list2<br>(<span class="hljs-built_in">integer</span>) 2<br>127.0.0.1:6379&gt; lrange list 0 -1<br>1) <span class="hljs-string">&quot;list2&quot;</span><br>2) <span class="hljs-string">&quot;list1&quot;</span><br>127.0.0.1:6379&gt; lrange list 0 0<br>1) <span class="hljs-string">&quot;list2&quot;</span><br><br><span class="hljs-comment">#尾插，顺序是正的</span><br>127.0.0.1:6379&gt; rpush list list1<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; rpush list list2<br>(<span class="hljs-built_in">integer</span>) 2<br>127.0.0.1:6379&gt; rpush list list3<br>(<span class="hljs-built_in">integer</span>) 3<br>127.0.0.1:6379&gt; lrange list 0 -1<br>1) <span class="hljs-string">&quot;list1&quot;</span><br>2) <span class="hljs-string">&quot;list2&quot;</span><br>3) <span class="hljs-string">&quot;list3&quot;</span><br>127.0.0.1:6379&gt; lpop list<span class="hljs-comment">#左边移除</span><br><span class="hljs-string">&quot;list1&quot;</span><br>127.0.0.1:6379&gt; rpop list<span class="hljs-comment">#右边移除</span><br><span class="hljs-string">&quot;list3&quot;</span><br>127.0.0.1:6379&gt; lindex list 0 <span class="hljs-comment">#从左边获取下标为0的元素</span><br><span class="hljs-string">&quot;one&quot;</span><br>127.0.0.1:6379&gt; llen list <span class="hljs-comment">#获取list长度</span><br>(<span class="hljs-built_in">integer</span>) 3<br>127.0.0.1:6379&gt; lrem list 1 three<span class="hljs-comment">#删除一个list集合中的 three元素</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; ltrim list 1 2<span class="hljs-comment">#截取list中间的元素，两边删除</span><br>OK<br>127.0.0.1:6379&gt; lrange list 0 -1<br>1) <span class="hljs-string">&quot;two&quot;</span><br>2) <span class="hljs-string">&quot;three&quot;</span><br>127.0.0.1:6379&gt; rpoplpush list newlist<span class="hljs-comment">#删除最后一个数据并添加到newlist的第一个数据</span><br><span class="hljs-string">&quot;three&quot;</span><br>127.0.0.1:6379&gt; lset list 0 hello <span class="hljs-comment">#替换list中第0个元素为hello。如果不存在就会报错</span><br>OK<br>127.0.0.1:6379&gt; linsert list before two one<span class="hljs-comment">#在list集合中two的前面插入one元素</span><br>(<span class="hljs-built_in">integer</span>) 4<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="Set类型详解"><a href="#Set类型详解" class="headerlink" title="Set类型详解"></a>Set类型详解</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; sadd myset hello<span class="hljs-comment">#往set类型的myset中添加元素</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; sadd myset ahui<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; smembers myset<span class="hljs-comment">#查询所有元素</span><br>1) <span class="hljs-string">&quot;ahui&quot;</span><br>2) <span class="hljs-string">&quot;hello&quot;</span><br>127.0.0.1:6379&gt; sismember myset ahui<span class="hljs-comment">#查询set类型的集合中是否存在该值</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; scard myset<span class="hljs-comment">#查询myset集合中有几个元素</span><br>(<span class="hljs-built_in">integer</span>) 2<br>127.0.0.1:6379&gt; srem myset hello<span class="hljs-comment">#删除myset集合中的hello元素</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; srandmember myset<span class="hljs-comment">#获取myset中随机的元素</span><br><span class="hljs-string">&quot;hello</span><br><span class="hljs-string">127.0.0.1:6379&gt; spop myset#随机删除元素</span><br><span class="hljs-string">&quot;</span>ahui<span class="hljs-string">&quot;</span><br><span class="hljs-string">127.0.0.1:6379&gt; smove myset myset2 hello#移动元素，将myset中的hello元素移到myset2中</span><br><span class="hljs-string">(integer) 1</span><br><span class="hljs-string">127.0.0.1:6379&gt; sdiff set1 set2#查找set1中set2没有的元素</span><br><span class="hljs-string">1) &quot;</span>b<span class="hljs-string">&quot;</span><br><span class="hljs-string">2) &quot;</span>a<span class="hljs-string">&quot;</span><br><span class="hljs-string">127.0.0.1:6379&gt; sunion set1 set2#查找set1和set2的并集</span><br><span class="hljs-string">1) &quot;</span>a<span class="hljs-string">&quot;</span><br><span class="hljs-string">2) &quot;</span>c<span class="hljs-string">&quot;</span><br><span class="hljs-string">3) &quot;</span>b<span class="hljs-string">&quot;</span><br><span class="hljs-string">4) &quot;</span>d<span class="hljs-string">&quot;</span><br><span class="hljs-string">5) &quot;</span>e<span class="hljs-string">&quot;</span><br><span class="hljs-string">127.0.0.1:6379&gt; sinter set1 set2#查找set1和set2的交集</span><br><span class="hljs-string">1) &quot;</span>c<span class="hljs-string">&quot;</span><br><span class="hljs-string"></span><br></code></pre></td></tr></table></figure>
+
+<h3 id="Hash-哈希"><a href="#Hash-哈希" class="headerlink" title="Hash(哈希)"></a>Hash(哈希)</h3><p>Map集合，key-Map形式</p>
+<p>类似于String类型</p>
+<p>hash变更的数据user name，age，尤其是用户信息之类，经常变动的信息！hash更适合于对象的存储，String跟适合字符的存储</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; hset myhash f1 ahui f2 v2<span class="hljs-comment">#设置hash值Map形式</span><br>(<span class="hljs-built_in">integer</span>) 2<br>127.0.0.1:6379&gt; hget myhash f1<span class="hljs-comment">#获取值</span><br><span class="hljs-string">&quot;ahui&quot;</span><br>127.0.0.1:6379&gt; hmget myhash f1 f2<span class="hljs-comment">#获取多个值</span><br>1) <span class="hljs-string">&quot;ahui&quot;</span><br>2) <span class="hljs-string">&quot;v2&quot;</span><br>127.0.0.1:6379&gt; hgetall myhash<span class="hljs-comment">#获取所有的值</span><br>1) <span class="hljs-string">&quot;f1&quot;</span><br>2) <span class="hljs-string">&quot;ahui&quot;</span><br>3) <span class="hljs-string">&quot;f2&quot;</span><br>4) <span class="hljs-string">&quot;v2&quot;</span><br>127.0.0.1:6379&gt; hdel myhash f1<span class="hljs-comment">#删除hash值</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; hgetall myhash<br>1) <span class="hljs-string">&quot;f2&quot;</span><br>2) <span class="hljs-string">&quot;v2&quot;</span><br>127.0.0.1:6379&gt; hlen myhash<span class="hljs-comment">#获取有多少个值</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; hkeys myhash<span class="hljs-comment">#获取所有的key</span><br>1) <span class="hljs-string">&quot;f2&quot;</span><br>127.0.0.1:6379&gt; hvals myhash<span class="hljs-comment">#获取所有的值</span><br>1) <span class="hljs-string">&quot;v2&quot;</span><br>127.0.0.1:6379&gt; hincrby mybash f3 1<span class="hljs-comment">#增加1</span><br>(<span class="hljs-built_in">integer</span>) 6<br>127.0.0.1:6379&gt; hincrby mybash f3 -1<span class="hljs-comment">#减1</span><br>(<span class="hljs-built_in">integer</span>) 5<br>127.0.0.1:6379&gt; hsetnx mybash f3 he<span class="hljs-comment">#如果不存在时新增</span><br>(<span class="hljs-built_in">integer</span>) 0<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="Zset有序集合"><a href="#Zset有序集合" class="headerlink" title="Zset有序集合"></a>Zset有序集合</h3><p>ZRANGEBYSCORE是按照score排列</p>
+<p>zrange是按照索引排列</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/jfqqqqq/article/details/102858508?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165236460416781685342181%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=165236460416781685342181&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-2-102858508-null-null.142%5Ev9%5Epc_search_result_control_group,157%5Ev4%5Econtrol&utm_term=zrange%E5%92%8Czrangebyscore%E5%8C%BA%E5%88%AB&spm=1018.2226.3001.4187">zrange和zrangebyscore区别</a></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">127.0.0.1:6379&gt; zadd myset 1 one<span class="hljs-comment">#添加一个元素中间标志位起到排序作用</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; zadd myset 2 two<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; zadd myset 3 three<br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; zrange myset 0 -1<span class="hljs-comment">#查询所有元素</span><br>1) <span class="hljs-string">&quot;one&quot;</span><br>2) <span class="hljs-string">&quot;two&quot;</span><br>3) <span class="hljs-string">&quot;three&quot;</span><br><span class="hljs-comment">#ZRANGEBYSCORE myset 最小值 最大值</span><br>127.0.0.1:6379&gt; ZRANGEBYSCORE myset -inf +inf<span class="hljs-comment">#根据score排序</span><br>1) <span class="hljs-string">&quot;one&quot;</span><br>2) <span class="hljs-string">&quot;two&quot;</span><br>3) <span class="hljs-string">&quot;three&quot;</span><br>4) <span class="hljs-string">&quot;four&quot;</span><br>5) <span class="hljs-string">&quot;five&quot;</span><br>127.0.0.1:6379&gt; zrem myset two<span class="hljs-comment">#删除zset集合中的two元素</span><br>(<span class="hljs-built_in">integer</span>) 1<br>127.0.0.1:6379&gt; zcard myset<span class="hljs-comment">#查看zset集合中有多少元素</span><br>(<span class="hljs-built_in">integer</span>) 4<br>127.0.0.1:6379&gt; ZREVRANGE myset 0 -1<span class="hljs-comment">#降序排列</span><br>1) <span class="hljs-string">&quot;five&quot;</span><br>2) <span class="hljs-string">&quot;four&quot;</span><br>3) <span class="hljs-string">&quot;three&quot;</span><br>4) <span class="hljs-string">&quot;one&quot;</span><br>127.0.0.1:6379&gt; zcount myset 4 6<span class="hljs-comment">#获取指定区间的成员数量</span><br>(<span class="hljs-built_in">integer</span>) 3<br><br></code></pre></td></tr></table></figure>
+
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/05/12/Redis/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis%E4%BA%94%E5%A4%A7%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B/" rel="tag">Redis五大基本类型</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2022/05/04/springMvc/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">springMvc</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2022
+        <i class="ri-heart-fill heart_icon"></i> ahui
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt=""></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" target="_blank" rel="noopener" href="http://shenyu-vip.lofter.com">摄影</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>
